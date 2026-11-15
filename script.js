@@ -3,7 +3,6 @@
 // so it stays correct even when the tab is in the background.
 
 var TOTAL_MS = 15 * 1000; // TEST ONLY: 15 seconds. Put back to 25 * 60 * 1000.
-var MAX_BLUR_PX = 18; // how blurry the painting is at the start
 
 var timeEl = document.getElementById('time');
 var mainBtn = document.getElementById('main-btn');
@@ -11,6 +10,10 @@ var resetBtn = document.getElementById('reset-btn');
 var restartBtn = document.getElementById('restart-btn');
 var detailsEl = document.getElementById('details');
 var paintingEl = document.getElementById('painting');
+var titleEl = document.getElementById('painting-title');
+var artistEl = document.getElementById('painting-artist');
+var yearEl = document.getElementById('painting-year');
+var linkEl = document.getElementById('painting-link');
 
 var state = 'idle'; // idle, running, paused, done
 var remainingMs = TOTAL_MS; // time left when not running
@@ -141,10 +144,6 @@ function render() {
   var secondsLeft = Math.ceil(remainingMs / 1000);
   timeEl.textContent = pad(Math.floor(secondsLeft / 60)) + ':' + pad(secondsLeft % 60);
 
-  // The painting gets sharper as the time runs down.
-  var blur = MAX_BLUR_PX * (remainingMs / TOTAL_MS);
-  paintingEl.style.setProperty('--blur', blur.toFixed(2) + 'px');
-
   var done = state === 'done';
   mainBtn.hidden = done;
   resetBtn.hidden = done;
@@ -213,8 +212,102 @@ mainBtn.addEventListener('click', function () {
   }
 });
 
-resetBtn.addEventListener('click', backToStart);
-restartBtn.addEventListener('click', backToStart);
+resetBtn.addEventListener('click', backToStart); // Reset keeps the same painting
+restartBtn.addEventListener('click', function () {
+  backToStart();
+  loadPainting(); // Restart session loads a new painting
+});
+
+// ---- Painting from the Met Museum's free public API ----
+// The image and all the details come from the same record, and are put on the
+// page together, so the details at 00:00 always belong to the painting you see.
+
+// Paintings made between 1400 and 1925 are almost all public domain.
+var SEARCH_URL = 'https://collectionapi.metmuseum.org/public/collection/v1.1/search?hasImages=true&medium=Paintings&dateBegin=1400&dateEnd=1925&limit=500&offset=';
+var OBJECT_URL = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/';
+var BATCH_SIZE = 8; // records checked at the same time
+var MAX_ROUNDS = 8; // so at most 64 records are checked per painting
+var loadCount = 0; // so an old, slow answer never replaces a newer painting
+
+// Get one record from the Met. Gives null if it could not be read.
+function fetchRecord(id) {
+  return fetch(OBJECT_URL + id)
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .catch(function () { return null; });
+}
+
+function isGoodPainting(o) {
+  return !!o && o.isPublicDomain === true &&
+    /^painting/i.test(o.objectName || '') &&
+    !!(o.primaryImageSmall || o.primaryImage);
+}
+
+function preloadImage(url) {
+  return new Promise(function (resolve, reject) {
+    var img = new Image();
+    img.onload = resolve;
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+function clearPainting() {
+  paintingEl.hidden = true;
+  paintingEl.removeAttribute('src');
+  titleEl.textContent = '';
+  artistEl.textContent = '';
+  yearEl.textContent = '';
+  linkEl.removeAttribute('href');
+}
+
+function showPainting(o, imageUrl) {
+  titleEl.textContent = o.title || 'Unknown';
+  artistEl.textContent = o.artistDisplayName || 'Unknown';
+  yearEl.textContent = o.objectDate || 'Unknown';
+  if (typeof o.objectURL === 'string' && o.objectURL.indexOf('https://www.metmuseum.org/') === 0) {
+    linkEl.href = o.objectURL;
+  }
+  paintingEl.src = imageUrl;
+  paintingEl.hidden = false;
+}
+
+async function loadPainting() {
+  var myLoad = ++loadCount;
+  clearPainting();
+  try {
+    // Start at a random place in the list of paintings that have an image.
+    var offset = Math.floor(Math.random() * 8800);
+    var search = await (await fetch(SEARCH_URL + offset)).json();
+    var ids = (search.objectIDs || []).slice();
+
+    // Look at a few random records at a time. Keep the first one that is a
+    // public domain painting with an image; quietly skip the others.
+    for (var round = 0; round < MAX_ROUNDS && ids.length > 0; round++) {
+      var batch = [];
+      while (batch.length < BATCH_SIZE && ids.length > 0) {
+        batch.push(ids.splice(Math.floor(Math.random() * ids.length), 1)[0]);
+      }
+      var records = await Promise.all(batch.map(fetchRecord));
+      if (myLoad !== loadCount) { return; }
+
+      for (var k = 0; k < records.length; k++) {
+        var o = records[k];
+        if (!isGoodPainting(o)) { continue; }
+        var imageUrl = o.primaryImageSmall || o.primaryImage;
+        try {
+          await preloadImage(imageUrl);
+        } catch (e) {
+          continue;
+        }
+        if (myLoad !== loadCount) { return; }
+        showPainting(o, imageUrl);
+        return;
+      }
+    }
+  } catch (e) {
+    console.error('Could not get a painting from the Met:', e);
+  }
+}
 
 // When you come back to the tab, update straight away.
 document.addEventListener('visibilitychange', function () {
@@ -224,3 +317,4 @@ document.addEventListener('visibilitychange', function () {
 });
 
 render();
+loadPainting();

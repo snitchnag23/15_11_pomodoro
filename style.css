@@ -11,8 +11,8 @@ body {
 
 /* The whole screen: dark warm background, everything centred */
 .app {
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: radial-gradient(ellipse at 50% 0, #2a2218 0, #0d0b09 72%);
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@ body {
   background: #15110c;
 }
 
-/* Placeholder artwork (tall on phone) */
+/* Space for the painting (tall on phone, wide on laptop) */
 .art {
   position: relative;
   overflow: hidden;
@@ -43,16 +43,12 @@ body {
   aspect-ratio: 4 / 5;
 }
 
+/* The real painting: whole picture fits inside the space, never stretched or cut */
 .painting {
-  position: absolute;
-  inset: -6%;
-  filter: blur(var(--blur, 18px));
-  transition: filter 0.25s linear;
-  background:
-    radial-gradient(circle at 68% 28%, #f7dc9a 0 8%, #f2b25f 9% 13%, transparent 14%),
-    radial-gradient(ellipse at 18% 100%, #3f6142 0 38%, transparent 39%),
-    radial-gradient(ellipse at 85% 100%, #2c4731 0 34%, transparent 35%),
-    linear-gradient(180deg, #2a3f73 0%, #7a5f8f 38%, #e08a5a 64%, #1b2b20 64%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Timer and buttons */
@@ -79,6 +75,7 @@ body {
   border-top: 1px solid rgba(212, 175, 55, 0.4);
   padding-top: 1.4vh;
   max-width: 78vw;
+  overflow-wrap: anywhere; /* long names wrap instead of running off the screen */
 }
 
 .details h3 {
