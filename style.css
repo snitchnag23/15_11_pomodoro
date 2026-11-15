@@ -1,7 +1,101 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
+  background: #0d0b09;
+  color: #e9c766;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* The whole screen: dark warm background, everything centred */
+.app {
+  height: 100vh;
+  height: 100dvh;
+  background: radial-gradient(ellipse at 50% 0, #2a2218 0, #0d0b09 72%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2.6vh;
+  padding: 3vh 4vw;
+  text-align: center;
+}
+
+/* Thick gold frame */
+.frame {
+  padding: clamp(8px, 1.6vh, 16px);
+  background: linear-gradient(135deg, #f3d98b, #b8892b 45%, #f0cf75 60%, #8a6417);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.67);
+}
+
+.mat {
+  padding: clamp(6px, 1.2vh, 12px);
+  background: #15110c;
+}
+
+/* Placeholder artwork (tall on phone) */
+.art {
+  position: relative;
+  overflow: hidden;
+  height: 38vh;
+  aspect-ratio: 4 / 5;
+}
+
+.painting {
+  position: absolute;
+  inset: -6%;
+  filter: blur(18px);
+  background:
+    radial-gradient(circle at 68% 28%, #f7dc9a 0 8%, #f2b25f 9% 13%, transparent 14%),
+    radial-gradient(ellipse at 18% 100%, #3f6142 0 38%, transparent 39%),
+    radial-gradient(ellipse at 85% 100%, #2c4731 0 34%, transparent 35%),
+    linear-gradient(180deg, #2a3f73 0%, #7a5f8f 38%, #e08a5a 64%, #1b2b20 64%);
+}
+
+/* Timer and buttons */
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8vh;
+}
+
+.time {
+  font-size: min(17vw, 10vh);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #e9c766;
+  font-variant-numeric: tabular-nums;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  font-family: Georgia, "Times New Roman", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: min(3.6vw, 2.4vh);
+  padding: 0.8em 1.7em;
+  border: 1.5px solid #d4af37;
+  background: transparent;
+  color: #e9c766;
+  cursor: default;
+}
+
+.btn.primary {
+  background: #d4af37;
+  color: #1a1408;
+}
+
+/* Laptop: wide painting */
+@media (min-width: 700px) {
+  .art {
+    aspect-ratio: 5 / 4;
+    height: 42vh;
+  }
 }
