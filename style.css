@@ -56,11 +56,50 @@ body {
 }
 
 /* Timer and buttons */
+[hidden] {
+  display: none !important;
+}
+
 .panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.8vh;
+}
+
+.timebox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8vh;
+}
+
+/* Painting details: shown only when the timer is finished */
+.details {
+  border-top: 1px solid rgba(212, 175, 55, 0.4);
+  padding-top: 1.4vh;
+  max-width: 78vw;
+}
+
+.details h3 {
+  margin: 0;
+  font-weight: 400;
+  font-style: italic;
+  font-size: min(5.6vw, 3.4vh);
+  color: #f1e6c8;
+}
+
+.details p {
+  margin: 0.2em 0 0;
+  color: #b9ad92;
+  font-size: min(3.8vw, 2.4vh);
+}
+
+.details a {
+  display: inline-block;
+  margin-top: 0.6em;
+  color: #e9c766;
+  font-size: min(3.8vw, 2.4vh);
 }
 
 .time {

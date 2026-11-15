@@ -1,16 +1,18 @@
-// Pomodoro timer: always 25 minutes.
+// Pomodoro timer.
 // The time left is worked out from the clock (Date.now), not by counting ticks,
 // so it stays correct even when the tab is in the background.
 
 var TOTAL_MS = 15 * 1000; // TEST ONLY: 15 seconds. Put back to 25 * 60 * 1000.
-var MAX_BLUR_PX = 18; // how blurry the painting is at 25:00
+var MAX_BLUR_PX = 18; // how blurry the painting is at the start
 
 var timeEl = document.getElementById('time');
 var mainBtn = document.getElementById('main-btn');
 var resetBtn = document.getElementById('reset-btn');
+var restartBtn = document.getElementById('restart-btn');
+var detailsEl = document.getElementById('details');
 var paintingEl = document.getElementById('painting');
 
-var state = 'idle'; // idle, running, paused
+var state = 'idle'; // idle, running, paused, done
 var remainingMs = TOTAL_MS; // time left when not running
 var endTime = 0; // clock time when the timer will hit 00:00 (while running)
 var intervalId = null;
@@ -27,11 +29,17 @@ function render() {
   var blur = MAX_BLUR_PX * (remainingMs / TOTAL_MS);
   paintingEl.style.setProperty('--blur', blur.toFixed(2) + 'px');
 
+  var done = state === 'done';
+  mainBtn.hidden = done;
+  resetBtn.hidden = done;
+  restartBtn.hidden = !done;
+  detailsEl.hidden = !done;
+
   if (state === 'idle') {
     mainBtn.textContent = 'Start';
   } else if (state === 'running') {
     mainBtn.textContent = 'Pause';
-  } else {
+  } else if (state === 'paused') {
     mainBtn.textContent = 'Resume';
   }
 }
@@ -46,9 +54,9 @@ function stopTicking() {
 function tick() {
   remainingMs = Math.max(0, endTime - Date.now());
   if (remainingMs === 0) {
-    // Reached 00:00: stop here. Nothing else happens.
+    // Reached 00:00: stop here, never go lower.
     stopTicking();
-    state = 'paused';
+    state = 'done';
   }
   render();
 }
@@ -61,6 +69,13 @@ function startTicking() {
   render();
 }
 
+function backToStart() {
+  stopTicking();
+  state = 'idle';
+  remainingMs = TOTAL_MS;
+  render();
+}
+
 mainBtn.addEventListener('click', function () {
   if (state === 'idle') {
     startTicking();
@@ -70,18 +85,14 @@ mainBtn.addEventListener('click', function () {
     stopTicking();
     state = 'paused';
     render();
-  } else if (remainingMs > 0) {
-    // Resume (does nothing at 00:00)
+  } else if (state === 'paused') {
+    // Resume
     startTicking();
   }
 });
 
-resetBtn.addEventListener('click', function () {
-  stopTicking();
-  state = 'idle';
-  remainingMs = TOTAL_MS;
-  render();
-});
+resetBtn.addEventListener('click', backToStart);
+restartBtn.addEventListener('click', backToStart);
 
 // When you come back to the tab, update straight away.
 document.addEventListener('visibilitychange', function () {
