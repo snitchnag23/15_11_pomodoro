@@ -37,18 +37,39 @@ body {
 
 /* Space for the painting (tall on phone, wide on laptop) */
 .art {
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   overflow: hidden;
   height: 38vh;
   aspect-ratio: 4 / 5;
 }
 
-/* The real painting: whole picture fits inside the space, never stretched or cut */
+/* The painting sits in a box with exactly its own shape, centred in the space.
+   The whole picture is always shown: never stretched, never cut off. */
+.fit {
+  --blur: 7; /* strong blur until the timer lowers it (set by script.js) */
+  container-type: size;
+  position: relative;
+  overflow: hidden; /* the blur stays inside the painting's own edges */
+  width: min(100cqw, calc(100cqh * var(--ratio, 1)));
+  aspect-ratio: var(--ratio, 1);
+}
+
+/* Blur size is a % of the painting's shorter side. The picture is zoomed in a
+   tiny bit while blurred, so the blur does not fade out at the edges. */
 .painting {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: blur(calc(var(--blur) * 1cqmin));
+  transform: scale(calc(1 + var(--blur) * 0.06));
+  transition: filter 0.25s linear, transform 0.25s linear;
 }
 
 /* Timer and buttons */

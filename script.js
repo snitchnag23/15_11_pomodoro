@@ -9,6 +9,7 @@ var mainBtn = document.getElementById('main-btn');
 var resetBtn = document.getElementById('reset-btn');
 var restartBtn = document.getElementById('restart-btn');
 var detailsEl = document.getElementById('details');
+var fitEl = document.getElementById('fit');
 var paintingEl = document.getElementById('painting');
 var titleEl = document.getElementById('painting-title');
 var artistEl = document.getElementById('painting-artist');
@@ -19,6 +20,10 @@ var state = 'idle'; // idle, running, paused, done
 var remainingMs = TOTAL_MS; // time left when not running
 var endTime = 0; // clock time when the timer will hit 00:00 (while running)
 var intervalId = null;
+
+// Blur at the start, as a % of the painting's shorter side (see style.css).
+// It goes down in step with the time left, and is 0 (fully sharp) at 00:00.
+var MAX_BLUR = 7;
 
 // ---- Bell sound ("Glass drop"), made with Web Audio. No sound files. ----
 // The bell is scheduled on the audio clock when the timer starts. The audio
@@ -144,6 +149,9 @@ function render() {
   var secondsLeft = Math.ceil(remainingMs / 1000);
   timeEl.textContent = pad(Math.floor(secondsLeft / 60)) + ':' + pad(secondsLeft % 60);
 
+  // How blurry the painting is: time left compared with the full length.
+  fitEl.style.setProperty('--blur', (MAX_BLUR * remainingMs / TOTAL_MS).toFixed(3));
+
   var done = state === 'done';
   mainBtn.hidden = done;
   resetBtn.hidden = done;
@@ -245,14 +253,14 @@ function isGoodPainting(o) {
 function preloadImage(url) {
   return new Promise(function (resolve, reject) {
     var img = new Image();
-    img.onload = resolve;
+    img.onload = function () { resolve(img); };
     img.onerror = reject;
     img.src = url;
   });
 }
 
 function clearPainting() {
-  paintingEl.hidden = true;
+  fitEl.hidden = true;
   paintingEl.removeAttribute('src');
   titleEl.textContent = '';
   artistEl.textContent = '';
@@ -260,7 +268,9 @@ function clearPainting() {
   linkEl.removeAttribute('href');
 }
 
-function showPainting(o, imageUrl) {
+function showPainting(o, imageUrl, loadedImage) {
+  // Give the box the painting's own shape, so it fits without stretching.
+  fitEl.style.setProperty('--ratio', loadedImage.naturalWidth / loadedImage.naturalHeight);
   titleEl.textContent = o.title || 'Unknown';
   artistEl.textContent = o.artistDisplayName || 'Unknown';
   yearEl.textContent = o.objectDate || 'Unknown';
@@ -268,7 +278,7 @@ function showPainting(o, imageUrl) {
     linkEl.href = o.objectURL;
   }
   paintingEl.src = imageUrl;
-  paintingEl.hidden = false;
+  fitEl.hidden = false; // the blur is already set, so it never shows sharp
 }
 
 async function loadPainting() {
@@ -294,13 +304,14 @@ async function loadPainting() {
         var o = records[k];
         if (!isGoodPainting(o)) { continue; }
         var imageUrl = o.primaryImageSmall || o.primaryImage;
+        var loaded;
         try {
-          await preloadImage(imageUrl);
+          loaded = await preloadImage(imageUrl);
         } catch (e) {
           continue;
         }
         if (myLoad !== loadCount) { return; }
-        showPainting(o, imageUrl);
+        showPainting(o, imageUrl, loaded);
         return;
       }
     }
