@@ -2,7 +2,7 @@
 // The time left is worked out from the clock (Date.now), not by counting ticks,
 // so it stays correct even when the tab is in the background.
 
-var TOTAL_MS = 15 * 1000; // TEST ONLY: 15 seconds. Put back to 25 * 60 * 1000.
+var TOTAL_MS = 25 * 60 * 1000; // 25 minutes
 
 var timeEl = document.getElementById('time');
 var mainBtn = document.getElementById('main-btn');
@@ -20,6 +20,7 @@ var state = 'idle'; // idle, running, paused, done
 var remainingMs = TOTAL_MS; // time left when not running
 var endTime = 0; // clock time when the timer will hit 00:00 (while running)
 var intervalId = null;
+var frameId = null; // the screen-refresh loop that keeps the blur smooth
 
 // Blur at the start, as a % of the painting's shorter side (see style.css).
 // It goes down in step with the time left, and is 0 (fully sharp) at 00:00.
@@ -145,12 +146,25 @@ function pad(n) {
   return (n < 10 ? '0' : '') + n;
 }
 
+// How blurry the painting is: time left compared with the full length.
+function setBlur(msLeft) {
+  fitEl.style.setProperty('--blur', (MAX_BLUR * msLeft / TOTAL_MS).toFixed(4));
+}
+
+// While the timer runs, update the blur on every screen refresh (about 60 times
+// a second) straight from the clock. This gives one even, steady motion.
+function blurLoop() {
+  frameId = null;
+  if (state !== 'running') { return; }
+  setBlur(Math.max(0, endTime - Date.now()));
+  frameId = requestAnimationFrame(blurLoop);
+}
+
 function render() {
   var secondsLeft = Math.ceil(remainingMs / 1000);
   timeEl.textContent = pad(Math.floor(secondsLeft / 60)) + ':' + pad(secondsLeft % 60);
 
-  // How blurry the painting is: time left compared with the full length.
-  fitEl.style.setProperty('--blur', (MAX_BLUR * remainingMs / TOTAL_MS).toFixed(3));
+  setBlur(remainingMs);
 
   var done = state === 'done';
   mainBtn.hidden = done;
@@ -172,6 +186,10 @@ function stopTicking() {
     clearInterval(intervalId);
     intervalId = null;
   }
+  if (frameId !== null) {
+    cancelAnimationFrame(frameId);
+    frameId = null;
+  }
 }
 
 function tick() {
@@ -190,6 +208,7 @@ function startTicking() {
   state = 'running';
   stopTicking();
   intervalId = setInterval(tick, 250);
+  frameId = requestAnimationFrame(blurLoop);
   scheduleBell();
   render();
 }

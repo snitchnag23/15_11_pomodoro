@@ -20,7 +20,7 @@ A Pomodoro timer (a countdown that helps you focus). It shows a real painting fr
 
 The painting's name, artist, year and link stay hidden until the timer reaches 00:00.
 
-**About the timer length:** it is set to 15 seconds for now, so it is quick to try out. The page has no way to change the length yet.
+**About the timer length:** it is always 25 minutes. The page has no way to change the length yet.
 
 ## Where the paintings come from
 

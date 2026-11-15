@@ -69,7 +69,7 @@ body {
   object-fit: contain;
   filter: blur(calc(var(--blur) * 1cqmin));
   transform: scale(calc(1 + var(--blur) * 0.06));
-  transition: filter 0.25s linear, transform 0.25s linear;
+  will-change: filter, transform; /* keep the moving painting on its own layer */
 }
 
 /* Timer and buttons */
@@ -157,5 +157,38 @@ body {
   .art {
     aspect-ratio: 5 / 4;
     height: 42vh;
+  }
+}
+
+/* Snap the painting space and the painting box to whole pixels, so the edges
+   sit exactly on the pixel grid and do not flicker between two pixels.
+   (This is last in the file so it wins over the sizes above.) */
+@supports (width: round(down, 10.5px, 1px)) {
+  .art {
+    height: round(down, 38vh, 1px);
+    width: round(down, calc(38vh * 0.8), 1px);
+    aspect-ratio: auto;
+  }
+
+  @media (min-width: 700px) {
+    .art {
+      height: round(down, 42vh, 1px);
+      width: round(down, calc(42vh * 1.25), 1px);
+    }
+  }
+
+  .fit {
+    --w: round(down, min(100cqw, calc(100cqh * var(--ratio, 1))), 1px);
+    --h: round(down, min(100cqh, calc(100cqw / var(--ratio, 1))), 1px);
+    position: absolute;
+    width: var(--w);
+    height: var(--h);
+    aspect-ratio: auto;
+    left: round(down, calc((100cqw - var(--w)) / 2), 1px);
+    top: round(down, calc((100cqh - var(--h)) / 2), 1px);
+  }
+
+  .painting {
+    object-fit: cover; /* the box is at most 1px off the painting's shape */
   }
 }
