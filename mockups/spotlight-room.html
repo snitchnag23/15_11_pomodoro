@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Spotlight Room</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#161616;color:#e8e0d0;font-family:Georgia,"Times New Roman",serif}
+.intro{text-align:center;padding:28px 16px 4px}
+.intro h1{margin:0 0 6px;font-weight:400;letter-spacing:.04em;color:#d4af37}
+.intro p{margin:0;color:#aaa;font:14px system-ui,sans-serif}
+.state{padding:24px 16px}
+.state h2{text-align:center;font:600 13px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#bbb;margin:0 0 16px}
+.devices{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.device{margin:0}
+.device figcaption{text-align:center;font:12px system-ui,sans-serif;color:#888;margin-top:8px}
+.screen{container-type:size;overflow:hidden;border:8px solid #2e2e2e;border-radius:16px;background:#000}
+.laptop .screen{width:960px;height:580px}
+.phone .screen{width:340px;height:720px;border-radius:34px}
+.app{width:100%;height:100%}
+.art{position:relative;overflow:hidden}
+.painting{position:absolute;inset:-6%;filter:blur(var(--blur,0));
+ background:
+  radial-gradient(circle at 68% 28%,#f7dc9a 0 8%,#f2b25f 9% 13%,transparent 14%),
+  radial-gradient(ellipse at 18% 100%,#3f6142 0 38%,transparent 39%),
+  radial-gradient(ellipse at 85% 100%,#2c4731 0 34%,transparent 35%),
+  linear-gradient(180deg,#2a3f73 0%,#7a5f8f 38%,#e08a5a 64%,#1b2b20 64%)}
+.blurred{--blur:18px}
+.half{--blur:9px}
+.sharp{--blur:0px}
+.btn{display:inline-block;cursor:default}
+.intro-note{color:#888}
+
+.btn{font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.12em;font-size:min(3.6cqw,2.4cqh);padding:.8em 1.7em}
+
+.app{background:radial-gradient(ellipse 70% 55% at 50% 38%,rgba(255,214,140,.25),transparent 70%),#080706;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4cqh;padding:3cqh 6cqw}
+.frame{padding:3px;background:#d4af37;box-shadow:0 0 60px rgba(255,200,110,.35)}
+.mat{background:#080706;padding:6px}
+.art{height:36cqh;aspect-ratio:4/5}
+.panel{text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.6cqh}
+.timebox{display:flex;flex-direction:column;align-items:center;gap:1.4cqh}
+.time{font-weight:300;font-size:20cqw;line-height:1;color:#f0cf75;text-shadow:0 0 28px rgba(255,200,110,.45);font-variant-numeric:tabular-nums}
+.buttons{display:flex;gap:10px}
+.btn{border:1px solid #d4af37aa;border-radius:999px;background:transparent;color:#f0cf75;font-size:min(3.4cqw,2.2cqh)}
+.btn.primary{background:#d4af37;color:#120d03;border-color:#d4af37}
+.details h3{margin:0;font-weight:300;font-size:min(6cqw,3.4cqh);color:#fff3d6}
+.details p{margin:.15em 0 0;color:#a89a7c;font-size:min(3.6cqw,2.3cqh)}
+.details a{display:inline-block;margin-top:.5em;color:#f0cf75;font-size:min(3.6cqw,2.3cqh)}
+@container (min-width:700px){
+ .app{flex-direction:row;gap:7cqw;background:radial-gradient(ellipse 45% 70% at 30% 50%,rgba(255,214,140,.28),transparent 70%),#080706}
+ .art{height:68cqh}
+ .panel{align-items:flex-start;text-align:left;width:40cqw}
+ .timebox{align-items:flex-start}
+ .time{font-size:11.5cqw}
+ .btn{font-size:2.3cqh}
+ .details h3{font-size:3.6cqh}
+ .details p,.details a{font-size:2.4cqh}
+}
+</style>
+</head>
+<body>
+  <header class="intro">
+    <h1>Spotlight Room</h1>
+    <p>A dark room with a glowing spotlight on the painting and big, thin gold numbers. Design mockup only: nothing works yet. The painting is a placeholder.</p>
+  </header>
+  <section class="state">
+    <h2>1 · Before starting</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app before">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting blurred"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">25:00</div><div class="buttons"><button class="btn primary" type="button">Start</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app before">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting blurred"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">25:00</div><div class="buttons"><button class="btn primary" type="button">Start</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+  <section class="state">
+    <h2>2 · Timer running</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app running">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting half"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">14:32</div><div class="buttons"><button class="btn primary" type="button">Pause</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app running">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting half"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">14:32</div><div class="buttons"><button class="btn primary" type="button">Pause</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+  <section class="state">
+    <h2>3 · Timer finished</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app finished">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting sharp"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">00:00</div><div class="buttons"><button class="btn primary" type="button">Restart session</button></div></div>
+      <div class="details">
+        <h3>Painting name</h3>
+        <p class="artist">Artist name</p>
+        <p class="year">Year</p>
+        <a href="#">Read about this painting</a>
+      </div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app finished">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting sharp"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">00:00</div><div class="buttons"><button class="btn primary" type="button">Restart session</button></div></div>
+      <div class="details">
+        <h3>Painting name</h3>
+        <p class="artist">Artist name</p>
+        <p class="year">Year</p>
+        <a href="#">Read about this painting</a>
+      </div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+</body>
+</html>

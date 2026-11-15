@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound samples</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #0d0b09; color: #e9c766; font-family: Georgia, "Times New Roman", serif; display: flex; flex-direction: column; align-items: center; padding: 40px 16px; }
+  h1 { font-weight: 400; letter-spacing: 0.04em; margin: 0 0 8px; }
+  .note { color: #b9ad92; margin: 0 0 32px; text-align: center; }
+  .sound { width: 100%; max-width: 420px; margin-bottom: 20px; text-align: center; }
+  .sound p { margin: 8px 0 0; color: #b9ad92; font-size: 15px; }
+  button { width: 100%; font-family: inherit; font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; padding: 16px; border: 1.5px solid #d4af37; background: #d4af37; color: #1a1408; cursor: pointer; }
+  button:active { background: #e9c766; }
+</style>
+</head>
+<body>
+  <h1>Sound samples</h1>
+  <p class="note">Press a button to hear each sound (about 2 to 3 seconds). Turn your volume up a little.</p>
+
+  <div class="sound"><button type="button" id="pop">Pop-pop</button><p>Two quick, bubbly notes going up, played twice.</p></div>
+  <div class="sound"><button type="button" id="glass">Glass drop</button><p>Two soft, round notes going down, with a gentle echo.</p></div>
+  <div class="sound"><button type="button" id="triple">Triple tap</button><p>Three short, clear notes going up, played twice.</p></div>
+
+<script>
+var ctx = null;
+
+function getCtx() {
+  if (!ctx) { ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+  if (ctx.state === 'suspended') { ctx.resume(); }
+  return ctx;
+}
+
+// One note: a main tone plus a quieter, higher "glassy" overtone.
+function note(dest, freq, t, decay, peak, type, overtone) {
+  var o = ctx.createOscillator();
+  var g = ctx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(peak, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+  o.connect(g);
+  g.connect(dest);
+  o.start(t);
+  o.stop(t + decay + 0.05);
+  if (overtone) {
+    var o2 = ctx.createOscillator();
+    var g2 = ctx.createGain();
+    o2.type = 'sine';
+    o2.frequency.value = freq * 2.01;
+    g2.gain.setValueAtTime(0.0001, t);
+    g2.gain.linearRampToValueAtTime(peak * overtone, t + 0.01);
+    g2.gain.exponentialRampToValueAtTime(0.0001, t + decay * 0.6);
+    o2.connect(g2);
+    g2.connect(dest);
+    o2.start(t);
+    o2.stop(t + decay + 0.05);
+  }
+}
+
+// A gentle echo that fades away, then the master volume.
+function makeOutput() {
+  var master = ctx.createGain();
+  master.gain.value = 0.3;
+  master.connect(ctx.destination);
+  var echo = ctx.createDelay(1);
+  echo.delayTime.value = 0.24;
+  var feedback = ctx.createGain();
+  feedback.gain.value = 0.35;
+  var soften = ctx.createBiquadFilter();
+  soften.type = 'lowpass';
+  soften.frequency.value = 3000;
+  echo.connect(feedback);
+  feedback.connect(echo);
+  echo.connect(soften);
+  soften.connect(master);
+  var input = ctx.createGain();
+  input.connect(master);
+  input.connect(echo);
+  return input;
+}
+
+function popPop() {
+  getCtx();
+  var out = makeOutput(), t = ctx.currentTime + 0.05;
+  [0, 1.1].forEach(function (s) {
+    note(out, 1046.5, t + s, 0.5, 0.5, 'sine', 0.2);
+    note(out, 1568.0, t + s + 0.13, 0.6, 0.5, 'sine', 0.2);
+  });
+}
+
+function glassDrop() {
+  getCtx();
+  var out = makeOutput(), t = ctx.currentTime + 0.05;
+  note(out, 1318.5, t, 4.2, 0.5, 'sine', 0.25);
+  note(out, 987.8, t + 0.3, 4.5, 0.5, 'sine', 0.25);
+}
+
+function tripleTap() {
+  getCtx();
+  var out = makeOutput(), t = ctx.currentTime + 0.05;
+  [0, 1.2].forEach(function (s) {
+    note(out, 784.0, t + s, 0.4, 0.45, 'triangle', 0);
+    note(out, 987.8, t + s + 0.16, 0.4, 0.45, 'triangle', 0);
+    note(out, 1174.7, t + s + 0.32, 0.5, 0.45, 'triangle', 0);
+  });
+}
+
+document.getElementById('pop').addEventListener('click', popPop);
+document.getElementById('glass').addEventListener('click', glassDrop);
+document.getElementById('triple').addEventListener('click', tripleTap);
+</script>
+</body>
+</html>

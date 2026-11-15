@@ -1,7 +1,161 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  background: #0d0b09;
+  color: #e9c766;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* The whole screen: dark warm background, everything centred */
+.app {
   min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at 50% 0, #2a2218 0, #0d0b09 72%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.6vh;
+  padding: 3vh 4vw;
+  text-align: center;
+}
+
+/* Thick gold frame */
+.frame {
+  padding: clamp(8px, 1.6vh, 16px);
+  background: linear-gradient(135deg, #f3d98b, #b8892b 45%, #f0cf75 60%, #8a6417);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.67);
+}
+
+.mat {
+  padding: clamp(6px, 1.2vh, 12px);
+  background: #15110c;
+}
+
+/* Space for the painting (tall on phone, wide on laptop) */
+.art {
+  container-type: size;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  height: 38vh;
+  aspect-ratio: 4 / 5;
+}
+
+/* The painting sits in a box with exactly its own shape, centred in the space.
+   The whole picture is always shown: never stretched, never cut off. */
+.fit {
+  --blur: 7; /* strong blur until the timer lowers it (set by script.js) */
+  container-type: size;
+  position: relative;
+  overflow: hidden; /* the blur stays inside the painting's own edges */
+  width: min(100cqw, calc(100cqh * var(--ratio, 1)));
+  aspect-ratio: var(--ratio, 1);
+}
+
+/* Blur size is a % of the painting's shorter side. The picture is zoomed in a
+   tiny bit while blurred, so the blur does not fade out at the edges. */
+.painting {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: blur(calc(var(--blur) * 1cqmin));
+  transform: scale(calc(1 + var(--blur) * 0.06));
+  transition: filter 0.25s linear, transform 0.25s linear;
+}
+
+/* Timer and buttons */
+[hidden] {
+  display: none !important;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8vh;
+}
+
+.timebox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8vh;
+}
+
+/* Painting details: shown only when the timer is finished */
+.details {
+  border-top: 1px solid rgba(212, 175, 55, 0.4);
+  padding-top: 1.4vh;
+  max-width: 78vw;
+  overflow-wrap: anywhere; /* long names wrap instead of running off the screen */
+}
+
+.details h3 {
+  margin: 0;
+  font-weight: 400;
+  font-style: italic;
+  font-size: min(5.6vw, 3.4vh);
+  color: #f1e6c8;
+}
+
+.details p {
+  margin: 0.2em 0 0;
+  color: #b9ad92;
+  font-size: min(3.8vw, 2.4vh);
+}
+
+.details a {
+  display: inline-block;
+  margin-top: 0.6em;
+  color: #e9c766;
+  font-size: min(3.8vw, 2.4vh);
+}
+
+.time {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-weight: 300;
+  font-size: min(19vw, 11vh);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #e9c766;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  font-family: Georgia, "Times New Roman", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: min(3.6vw, 2.4vh);
+  padding: 0.8em 1.7em;
+  border: 1.5px solid #d4af37;
+  background: transparent;
+  color: #e9c766;
+  cursor: default;
+}
+
+.btn.primary {
+  background: #d4af37;
+  color: #1a1408;
+}
+
+/* Laptop: wide painting */
+@media (min-width: 700px) {
+  .art {
+    aspect-ratio: 5 / 4;
+    height: 42vh;
+  }
 }

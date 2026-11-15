@@ -62,6 +62,11 @@
 
 
 
+## Design
+
+* Design: Gallery Wall (see mockups/gallery-wall.html). Use it for all steps.
+
+
 ## Always true 
 
 * The default timer length is 25 minutes. 
