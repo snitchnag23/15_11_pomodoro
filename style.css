@@ -46,7 +46,8 @@ body {
 .painting {
   position: absolute;
   inset: -6%;
-  filter: blur(18px);
+  filter: blur(var(--blur, 18px));
+  transition: filter 0.25s linear;
   background:
     radial-gradient(circle at 68% 28%, #f7dc9a 0 8%, #f2b25f 9% 13%, transparent 14%),
     radial-gradient(ellipse at 18% 100%, #3f6142 0 38%, transparent 39%),
