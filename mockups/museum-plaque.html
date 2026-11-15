@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Museum Plaque</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#161616;color:#e8e0d0;font-family:Georgia,"Times New Roman",serif}
+.intro{text-align:center;padding:28px 16px 4px}
+.intro h1{margin:0 0 6px;font-weight:400;letter-spacing:.04em;color:#d4af37}
+.intro p{margin:0;color:#aaa;font:14px system-ui,sans-serif}
+.state{padding:24px 16px}
+.state h2{text-align:center;font:600 13px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#bbb;margin:0 0 16px}
+.devices{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+.device{margin:0}
+.device figcaption{text-align:center;font:12px system-ui,sans-serif;color:#888;margin-top:8px}
+.screen{container-type:size;overflow:hidden;border:8px solid #2e2e2e;border-radius:16px;background:#000}
+.laptop .screen{width:960px;height:580px}
+.phone .screen{width:340px;height:720px;border-radius:34px}
+.app{width:100%;height:100%}
+.art{position:relative;overflow:hidden}
+.painting{position:absolute;inset:-6%;filter:blur(var(--blur,0));
+ background:
+  radial-gradient(circle at 68% 28%,#f7dc9a 0 8%,#f2b25f 9% 13%,transparent 14%),
+  radial-gradient(ellipse at 18% 100%,#3f6142 0 38%,transparent 39%),
+  radial-gradient(ellipse at 85% 100%,#2c4731 0 34%,transparent 35%),
+  linear-gradient(180deg,#2a3f73 0%,#7a5f8f 38%,#e08a5a 64%,#1b2b20 64%)}
+.blurred{--blur:18px}
+.half{--blur:9px}
+.sharp{--blur:0px}
+.btn{display:inline-block;cursor:default}
+.intro-note{color:#888}
+
+.btn{font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.12em;font-size:min(3.6cqw,2.4cqh);padding:.8em 1.7em}
+
+.app{background:repeating-linear-gradient(90deg,#141414 0 6px,#111 6px 12px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.6cqh;padding:3cqh 5cqw}
+.frame{padding:0;border:1px solid #d4af37;background:#1c1c1e;box-shadow:0 14px 30px #000b}
+.mat{padding:clamp(14px,3.2cqh,30px) clamp(14px,3.2cqh,30px)}
+.art{height:33cqh;aspect-ratio:4/5;border:1px solid #d4af3788}
+@container (min-width:700px){.art{aspect-ratio:5/4;height:40cqh}}
+.panel{width:100%;max-width:92cqw;display:flex;justify-content:center}
+.panel>*{width:100%}
+.timebox,.details{padding:1.6cqh 3cqw}
+.panel{background:linear-gradient(145deg,#d9b552,#a27c2c 55%,#cfa94a);border-radius:4px;box-shadow:inset 0 0 0 1.5px #f3dc96,inset 0 0 0 3px #7a5a18,0 8px 18px #000a;color:#24190a;flex-direction:column;align-items:stretch;text-align:center}
+.timebox{display:flex;flex-direction:column;align-items:center;gap:1.4cqh}
+.time{font-size:min(15cqw,9cqh);line-height:1;letter-spacing:.08em;font-variant-numeric:tabular-nums;color:#24190a}
+.buttons{display:flex;gap:10px}
+.btn{border:1.5px solid #24190a;background:transparent;color:#24190a;font-size:min(3.4cqw,2.2cqh);padding:.7em 1.5em}
+.btn.primary{background:#24190a;color:#e9c766}
+.details{border-top:1px solid #24190a66}
+.details h3{margin:0;font-size:min(5.4cqw,3.2cqh);font-weight:700}
+.details p{margin:.15em 0 0;font-size:min(3.8cqw,2.3cqh)}
+.details a{display:inline-block;margin-top:.4em;color:#24190a;font-weight:700;font-size:min(3.8cqw,2.3cqh)}
+@container (min-width:700px){
+ .panel{max-width:70cqw;flex-direction:row;align-items:center}
+ .panel>*{width:auto}
+ .timebox{flex:1}
+ .details{flex:1.2;border-top:0;border-left:1px solid #24190a66;text-align:left;padding-left:3cqw}
+ .time{font-size:min(8cqw,9cqh)}
+ .btn{font-size:2cqh}
+}
+</style>
+</head>
+<body>
+  <header class="intro">
+    <h1>Museum Plaque</h1>
+    <p>A mounted print with a gold plaque that holds the timer, then the painting's details. Design mockup only: nothing works yet. The painting is a placeholder.</p>
+  </header>
+  <section class="state">
+    <h2>1 · Before starting</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app before">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting blurred"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">25:00</div><div class="buttons"><button class="btn primary" type="button">Start</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app before">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting blurred"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">25:00</div><div class="buttons"><button class="btn primary" type="button">Start</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+  <section class="state">
+    <h2>2 · Timer running</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app running">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting half"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">14:32</div><div class="buttons"><button class="btn primary" type="button">Pause</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app running">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting half"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">14:32</div><div class="buttons"><button class="btn primary" type="button">Pause</button><button class="btn" type="button">Reset</button></div></div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+  <section class="state">
+    <h2>3 · Timer finished</h2>
+    <div class="devices">
+      <figure class="device laptop"><div class="screen"><div class="app finished">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting sharp"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">00:00</div><div class="buttons"><button class="btn primary" type="button">Restart session</button></div></div>
+      <div class="details">
+        <h3>Painting name</h3>
+        <p class="artist">Artist name</p>
+        <p class="year">Year</p>
+        <a href="#">Read about this painting</a>
+      </div>
+      </div>
+    </div></div><figcaption>Laptop</figcaption></figure>
+      <figure class="device phone"><div class="screen"><div class="app finished">
+      <div class="frame"><div class="mat"><div class="art"><div class="painting sharp"></div></div></div></div>
+      <div class="panel">
+        <div class="timebox"><div class="time">00:00</div><div class="buttons"><button class="btn primary" type="button">Restart session</button></div></div>
+      <div class="details">
+        <h3>Painting name</h3>
+        <p class="artist">Artist name</p>
+        <p class="year">Year</p>
+        <a href="#">Read about this painting</a>
+      </div>
+      </div>
+    </div></div><figcaption>Phone</figcaption></figure>
+    </div>
+  </section>
+</body>
+</html>
