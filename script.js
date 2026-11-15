@@ -2,7 +2,7 @@
 // The time left is worked out from the clock (Date.now), not by counting ticks,
 // so it stays correct even when the tab is in the background.
 
-var TOTAL_MS = 25 * 60 * 1000;
+var TOTAL_MS = 15 * 1000; // TEST ONLY: 15 seconds. Put back to 25 * 60 * 1000.
 var MAX_BLUR_PX = 18; // how blurry the painting is at 25:00
 
 var timeEl = document.getElementById('time');
