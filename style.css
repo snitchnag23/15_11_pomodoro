@@ -63,11 +63,13 @@ body {
 }
 
 .time {
-  font-size: min(17vw, 10vh);
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-weight: 300;
+  font-size: min(19vw, 11vh);
   line-height: 1;
   letter-spacing: 0.06em;
   color: #e9c766;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .buttons {
